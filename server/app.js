@@ -5,6 +5,9 @@ const { authToken } = require('./middleware/token');
 const dotenv = require('dotenv');
 dotenv.config();
 const app = express();
+const fs = require('fs');
+const path = require('path');
+const https = require('https');
 
 // const mysql = require('mysql2/promise');
 
@@ -90,6 +93,7 @@ const app = express();
 
 app.use(express.json());
 
+const HTTPS_PORT = process.env.HTTPS_PORT || 4000;
 const port = process.env.NODE_ENV === 'test' ? 4999 : 80;
 
 app.use(
@@ -120,6 +124,21 @@ app.get('/status', authToken, (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`서버가 ${port}번에서 작동중입니다.`);
-});
+let server;
+if (fs.existsSync('./key.pem') && fs.existsSync('./cert.pem')) {
+  const privateKey = fs.readFileSync(path.join(__dirname, 'key.pem'), 'utf8');
+  const certificate = fs.readFileSync(path.join(__dirname, 'cert.pem'), 'utf8');
+  const credentials = {
+    key: privateKey,
+    cert: certificate
+  };
+
+  server = https.createServer(credentials, app);
+  server.listen(HTTPS_PORT, () => console.log(`🚀 HTTPS Server is starting on ${HTTPS_PORT}`));
+} else {
+  server = app.listen(HTTPS_PORT, () => console.log(`🚀 HTTP Server is starting on ${HTTPS_PORT}`));
+}
+
+// app.listen(port, () => {
+//   console.log(`서버가 ${port}번에서 작동중입니다.`);
+// });
