@@ -108,7 +108,7 @@ app.post('/signin', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.status(201).send('Hello World');
+  res.status(201).send('Hello World Again!');
 });
 
 app.get('/status', authToken, (req, res) => {
