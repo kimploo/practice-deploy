@@ -1,0 +1,47 @@
+name: server
+# 해당 브랜치가 push 될 때 해당 액션을 실행
+on:
+  push:
+    branches: [ main ]
+# 액션을 실행시키는 runner의 운영체제
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    #액션의 실행 수행내용, 단계별로 실행된다.
+    steps:
+      - name: Checkout source code.
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: zip distributions
+        run: zip -r deploy-kimploo.zip ./server ./appspec.yml ./scripts
+
+      - name: AWS configure credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+          
+      #s3,codeDeploy 경로와 이름 알맞게 입력
+      - name: upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./deploy-kimploo.zip s3://fe-student-bucket/fe-student-0-kimploo/deploy
+
+      - name: deploy with AWS codeDeploy
+        run: aws deploy create-deployment
+          --application-name fe-student-deploy
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name fe-student-deploy
+          --s3-location bucket=deploy-kimploo,bundleType=zip,key=fe-student-0-kimploo/deploy/deploy-kimploo.zip
