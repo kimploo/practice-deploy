@@ -54,6 +54,7 @@ class App extends Component {
             ? (
               <>
                 <div className="success">로그인에 성공했습니다</div>
+                <div className="success">배포 성공 여부를 확인합니다.</div>
                 <Main changeLoginStatus={this.changeLoginStatus} />
               </>
             )
