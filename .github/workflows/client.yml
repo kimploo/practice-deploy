@@ -1,5 +1,4 @@
 name: client
-
 on:
   push:
     branches:
@@ -34,9 +33,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_METADATA_DISABLED: true
         run: |
-          aws s3 sync \
+          aws s3 cp \
             --region ap-northeast-2 \
-            _site s3://owlsnest-kr-blog \
+            build s3://fe-student-bucket/fe-student-0-kimploo \
             --delete
         working-directory: ./client
       - name: Invalidate Cache
