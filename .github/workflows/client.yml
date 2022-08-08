@@ -36,7 +36,6 @@ jobs:
           aws s3 cp \
             --region ap-northeast-2 \
             build s3://fe-student-bucket/fe-student-0-kimploo \
-            --delete
         working-directory: ./client
       - name: Invalidate Cache
         env:
