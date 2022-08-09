@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: ~/fe-sprint-practice-deploy
+    destination: /home/ssm-user/fe-sprint-practice-deploy
 
 hooks:
   ApplicationStop:
