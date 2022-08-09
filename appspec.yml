@@ -5,13 +5,29 @@ files:
     destination: /home/ssm-user/fe-sprint-practice-deploy
 
 hooks:
+# 앱이 멈추고 실행되는 스크립트
   ApplicationStop:
     - location: scripts/stop.sh
       runas: root
+# 앱이 설치가 끝나고 실행되는 스크립트
   AfterInstall:
     - location: scripts/initialize.sh
       runas: root
+# 앱이 다시 시작하고 실행되는 스크립트
   ApplicationStart:
     - location: scripts/start.sh
       runas: root
 
+# Code Deploy의 역할이 뭔가요?
+  # Source 단계 => 코드를 준비했다.
+  # Build 단계 => 소스 코드를 실행 가능한 단계로 만들었어요
+  # Deploy 단계 => EC2 => 당장 실행 가능한 상태로 만든다.
+
+# Source 단계 
+  # 이전에 준비하셨던 코드 / 이번에 새로 준비한 코드가 있어요
+  # => 다른점이 있다.
+
+# 컴퓨터가 하나면.. 꺼야죠!
+# Deploy 단계
+  # 이전에 실행중인 프로세스 => 꺼야죠
+  # 이번에 새로 실행할 미래의 프로세스가 있어요
