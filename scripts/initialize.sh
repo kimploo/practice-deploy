@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/ubuntu/im-sprint-practice-deploy/server
+cd /home/ssm-user/fe-sprint-practice-deploy/server
 npm install
 npm install pm2@latest -g
 sudo apt-get update
